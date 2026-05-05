@@ -81,7 +81,7 @@ function renderDoctors() {
             <td><strong>${doc.name}</strong></td>
             <td>${doc.specialty}</td>
             <td>${doc.room}-xona</td>
-            <td><button class="btn" style="color: var(--accent)" onclick="deleteDoctor(${doc.id})"><i data-lucide="trash-2"></i></button></td>
+
         </tr>
     `).join('');
     lucide.createIcons();
@@ -107,9 +107,7 @@ function renderQueue() {
             <td>${q.patient_name}</td>
             <td>${q.doctor_name}</td>
             <td>${q.time}</td>
-            <td>
-                <button class="btn" onclick="deleteQueue(${q.id})" style="color: var(--accent)"><i data-lucide="trash-2"></i></button>
-            </td>
+
         </tr>
     `).join('');
     lucide.createIcons();
