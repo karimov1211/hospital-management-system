@@ -6,3 +6,4 @@ python-dotenv
 pyodbc
 gunicorn
 uvicorn
+whitenoise
