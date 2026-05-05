@@ -1,6 +1,8 @@
-fastapi
-uvicorn
-pyodbc
-pydantic
+django
+djangorestframework
+mssql-django
+django-cors-headers
 python-dotenv
-sqlalchemy
+pyodbc
+gunicorn
+uvicorn
