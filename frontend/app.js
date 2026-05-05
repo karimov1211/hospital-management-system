@@ -1,23 +1,35 @@
+const API_URL = "http://localhost:8000";
+
 // Data State
-let doctors = JSON.parse(localStorage.getItem('medcare_doctors')) || [
-    { id: 1, name: "Dr. Alisher Vohidov", specialty: "Kardiolog", room: "102" },
-    { id: 2, name: "Dr. Malika Ahmedova", specialty: "Nevropatolog", room: "205" }
-];
-
-let patients = JSON.parse(localStorage.getItem('medcare_patients')) || [
-    { id: 1, name: "Jasur Karimov", phone: "+998 90 123 45 67", age: 28 },
-    { id: 2, name: "Olima Ergasheva", phone: "+998 93 987 65 43", age: 45 }
-];
-
-let queue = JSON.parse(localStorage.getItem('medcare_queue')) || [];
+let doctors = [];
+let patients = [];
+let queue = [];
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     updateCurrentDate();
     initNavigation();
-    renderAll();
+    fetchAllData();
     setupForms();
 });
+
+async function fetchAllData() {
+    try {
+        const [docsRes, patsRes, queueRes] = await Promise.all([
+            fetch(`${API_URL}/doctors`),
+            fetch(`${API_URL}/patients`),
+            fetch(`${API_URL}/queue`)
+        ]);
+
+        doctors = await docsRes.json();
+        patients = await patsRes.json();
+        queue = await queueRes.json();
+
+        renderAll();
+    } catch (error) {
+        console.error("Ma'lumotlarni yuklashda xatolik:", error);
+    }
+}
 
 function updateCurrentDate() {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -31,19 +43,11 @@ function initNavigation() {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const sectionId = link.getAttribute('data-section');
-            
-            // Toggle active link
             links.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
-
-            // Toggle sections
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
-
-            // Update title
             document.getElementById('page-title').innerText = link.innerText.trim();
-            
-            renderAll();
         });
     });
 }
@@ -55,9 +59,6 @@ function renderAll() {
     renderPatients();
     renderQueue();
     updateSelects();
-    localStorage.setItem('medcare_doctors', JSON.stringify(doctors));
-    localStorage.setItem('medcare_patients', JSON.stringify(patients));
-    localStorage.setItem('medcare_queue', JSON.stringify(queue));
 }
 
 function renderStats() {
@@ -96,8 +97,8 @@ function renderQueue() {
     const fullTbody = document.querySelector('#full-queue-table tbody');
 
     const queueHtml = queue.map((q, index) => {
-        const patient = patients.find(p => p.id == q.patientId) || { name: 'Noma'lum' };
-        const doctor = doctors.find(d => d.id == q.doctorId) || { name: 'Noma'lum' };
+        const patient = patients.find(p => p.id == q.patient_id) || { name: "Noma'lum" };
+        const doctor = doctors.find(d => d.id == q.doctor_id) || { name: "Noma'lum" };
         
         return {
             html: `
@@ -129,7 +130,6 @@ function renderQueue() {
 function updateSelects() {
     const pSelect = document.getElementById('queue-patient-select');
     const dSelect = document.getElementById('queue-doctor-select');
-
     if(pSelect) pSelect.innerHTML = patients.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
     if(dSelect) dSelect.innerHTML = doctors.map(d => `<option value="${d.id}">${d.name} (${d.specialty})</option>`).join('');
 }
@@ -138,38 +138,29 @@ function updateSelects() {
 function setupForms() {
     const qForm = document.getElementById('queue-form');
     if(qForm) {
-        qForm.addEventListener('submit', (e) => {
+        qForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const pId = document.getElementById('queue-patient-select').value;
             const dId = document.getElementById('queue-doctor-select').value;
             
-            queue.push({
-                patientId: pId,
-                doctorId: dId,
+            const newItem = {
+                patient_id: parseInt(pId),
+                doctor_id: parseInt(dId),
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 status: 'waiting'
+            };
+
+            await fetch(`${API_URL}/queue`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newItem)
             });
             
-            renderAll();
+            fetchAllData();
             qForm.reset();
         });
     }
 }
-
-// Actions
-window.completeQueue = (index) => {
-    queue[index].status = 'completed';
-    setTimeout(() => {
-        queue.splice(index, 1);
-        renderAll();
-    }, 500);
-    renderAll();
-};
-
-window.deleteDoctor = (id) => {
-    doctors = doctors.filter(d => d.id !== id);
-    renderAll();
-};
 
 // Modal Logic
 const overlay = document.getElementById('modal-overlay');
@@ -199,18 +190,31 @@ window.showModal = (type) => {
 
 window.closeModal = () => { overlay.style.display = 'none'; };
 
-document.getElementById('modal-save-btn').addEventListener('click', () => {
+document.getElementById('modal-save-btn').addEventListener('click', async () => {
+    let endpoint = currentModalType === 'doctor' ? '/doctors' : '/patients';
+    let data = {};
+
     if(currentModalType === 'doctor') {
-        const name = document.getElementById('m-doc-name').value;
-        const spec = document.getElementById('m-doc-spec').value;
-        const room = document.getElementById('m-doc-room').value;
-        if(name) doctors.push({ id: Date.now(), name, specialty: spec, room });
+        data = {
+            name: document.getElementById('m-doc-name').value,
+            specialty: document.getElementById('m-doc-spec').value,
+            room: document.getElementById('m-doc-room').value
+        };
     } else {
-        const name = document.getElementById('m-pat-name').value;
-        const phone = document.getElementById('m-pat-phone').value;
-        const age = document.getElementById('m-pat-age').value;
-        if(name) patients.push({ id: Date.now(), name, phone, age });
+        data = {
+            name: document.getElementById('m-pat-name').value,
+            phone: document.getElementById('m-pat-phone').value,
+            age: parseInt(document.getElementById('m-pat-age').value)
+        };
     }
-    renderAll();
-    closeModal();
+
+    if(data.name) {
+        await fetch(`${API_URL}${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        fetchAllData();
+        closeModal();
+    }
 });
