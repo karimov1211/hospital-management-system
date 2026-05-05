@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8000";
+const API_URL = "http://localhost:8000/api";
 
 // Data State
 let doctors = [];
@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
 async function fetchAllData() {
     try {
         const [docsRes, patsRes, queueRes] = await Promise.all([
-            fetch(`${API_URL}/doctors`),
-            fetch(`${API_URL}/patients`),
-            fetch(`${API_URL}/queue`)
+            fetch(`${API_URL}/doctors/`),
+            fetch(`${API_URL}/patients/`),
+            fetch(`${API_URL}/queue/`)
         ]);
 
         doctors = await docsRes.json();
@@ -49,19 +49,13 @@ function initNavigation() {
 }
 
 window.switchSection = (sectionId) => {
-    // Update links
     document.querySelectorAll('.nav-menu a').forEach(l => {
         l.classList.remove('active');
         if(l.getAttribute('data-section') === sectionId) l.classList.add('active');
     });
-
-    // Toggle sections
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.getElementById(sectionId).classList.add('active');
-
-    // Smooth scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
     if(sectionId !== 'home') fetchAllData();
 };
 
@@ -87,7 +81,7 @@ function renderDoctors() {
             <td><strong>${doc.name}</strong></td>
             <td>${doc.specialty}</td>
             <td>${doc.room}-xona</td>
-            <td><button class="btn" style="color: var(--danger)" onclick="deleteDoctor(${doc.id})"><i data-lucide="trash-2"></i></button></td>
+            <td><button class="btn" style="color: var(--accent)" onclick="deleteDoctor(${doc.id})"><i data-lucide="trash-2"></i></button></td>
         </tr>
     `).join('');
     lucide.createIcons();
@@ -100,43 +94,24 @@ function renderPatients() {
             <td><strong>${p.name}</strong></td>
             <td>${p.phone}</td>
             <td>${p.age} yosh</td>
-            <td>Bugun</td>
+            <td><span class="status-badge status-completed">Ro'yxatda</span></td>
         </tr>
     `).join('');
 }
 
 function renderQueue() {
-    const dashTbody = document.querySelector('#dashboard-queue-table tbody');
     const fullTbody = document.querySelector('#full-queue-table tbody');
-
-    const queueHtml = queue.map((q, index) => {
-        const patient = patients.find(p => p.id == q.patient_id) || { name: "Noma'lum" };
-        const doctor = doctors.find(d => d.id == q.doctor_id) || { name: "Noma'lum" };
-        
-        return {
-            html: `
-                <tr>
-                    <td>${patient.name}</td>
-                    <td>${doctor.name}</td>
-                    <td>${q.time}</td>
-                    <td><span class="status-badge status-${q.status}">${q.status === 'waiting' ? 'Kutilmoqda' : 'Tugallangan'}</span></td>
-                </tr>
-            `,
-            fullHtml: `
-                <tr>
-                    <td>#${index + 1}</td>
-                    <td>${patient.name}</td>
-                    <td>${doctor.name}</td>
-                    <td>
-                        <button class="btn" onclick="completeQueue(${index})" style="color: var(--success)"><i data-lucide="check-circle"></i></button>
-                    </td>
-                </tr>
-            `
-        };
-    });
-
-    dashTbody.innerHTML = queueHtml.map(x => x.html).join('');
-    fullTbody.innerHTML = queueHtml.map(x => x.fullHtml).join('');
+    fullTbody.innerHTML = queue.map((q, index) => `
+        <tr>
+            <td>#${index + 1}</td>
+            <td>${q.patient_name}</td>
+            <td>${q.doctor_name}</td>
+            <td>${q.time}</td>
+            <td>
+                <button class="btn" onclick="deleteQueue(${q.id})" style="color: var(--accent)"><i data-lucide="trash-2"></i></button>
+            </td>
+        </tr>
+    `).join('');
     lucide.createIcons();
 }
 
@@ -157,13 +132,13 @@ function setupForms() {
             const dId = document.getElementById('queue-doctor-select').value;
             
             const newItem = {
-                patient_id: parseInt(pId),
-                doctor_id: parseInt(dId),
+                patient: parseInt(pId),
+                doctor: parseInt(dId),
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 status: 'waiting'
             };
 
-            await fetch(`${API_URL}/queue`, {
+            await fetch(`${API_URL}/queue/`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newItem)
@@ -187,16 +162,16 @@ window.showModal = (type) => {
     if(type === 'doctor') {
         mTitle.innerText = "Yangi shifokor";
         mContent.innerHTML = `
-            <div class="form-group"><label>Ism-sharif</label><input id="m-doc-name" type="text"></div>
-            <div class="form-group"><label>Mutaxassislik</label><input id="m-doc-spec" type="text"></div>
-            <div class="form-group"><label>Xona</label><input id="m-doc-room" type="text"></div>
+            <div class="input-group"><label>Ism-sharif</label><input id="m-doc-name" type="text"></div>
+            <div class="input-group"><label>Mutaxassislik</label><input id="m-doc-spec" type="text"></div>
+            <div class="input-group"><label>Xona</label><input id="m-doc-room" type="text"></div>
         `;
     } else {
         mTitle.innerText = "Yangi bemor";
         mContent.innerHTML = `
-            <div class="form-group"><label>Ism-sharif</label><input id="m-pat-name" type="text"></div>
-            <div class="form-group"><label>Telefon</label><input id="m-pat-phone" type="text"></div>
-            <div class="form-group"><label>Yosh</label><input id="m-pat-age" type="number"></div>
+            <div class="input-group"><label>Ism-sharif</label><input id="m-pat-name" type="text"></div>
+            <div class="input-group"><label>Telefon</label><input id="m-pat-phone" type="text"></div>
+            <div class="input-group"><label>Yosh</label><input id="m-pat-age" type="number"></div>
         `;
     }
 };
@@ -204,7 +179,7 @@ window.showModal = (type) => {
 window.closeModal = () => { overlay.style.display = 'none'; };
 
 document.getElementById('modal-save-btn').addEventListener('click', async () => {
-    let endpoint = currentModalType === 'doctor' ? '/doctors' : '/patients';
+    let endpoint = currentModalType === 'doctor' ? '/doctors/' : '/patients/';
     let data = {};
 
     if(currentModalType === 'doctor') {
@@ -231,3 +206,13 @@ document.getElementById('modal-save-btn').addEventListener('click', async () => 
         closeModal();
     }
 });
+
+window.deleteDoctor = async (id) => {
+    await fetch(`${API_URL}/doctors/${id}/`, { method: 'DELETE' });
+    fetchAllData();
+};
+
+window.deleteQueue = async (id) => {
+    await fetch(`${API_URL}/queue/${id}/`, { method: 'DELETE' });
+    fetchAllData();
+};
