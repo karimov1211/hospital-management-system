@@ -30,6 +30,7 @@ SECRET_KEY = 'django-insecure-j55g8sfqihzaq_z0(4wl!dxpz9y&+$0n8cl7g(k=v-#z9(1gg5
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://medcare-hospital-2026-guh5fuhqf8exe8ah.eastasia-01.azurewebsites.net']
 
 
 # Application definition
