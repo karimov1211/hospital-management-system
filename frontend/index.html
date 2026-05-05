@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedCare | Kasalxona Boshqaruv Tizimi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">
+            <i data-lucide="activity"></i>
+            <span>MedCare</span>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-section="dashboard">
+                        <i data-lucide="layout-dashboard"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="doctors">
+                        <i data-lucide="stethoscope"></i> Shifokorlar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="patients">
+                        <i data-lucide="users"></i> Bemorlar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="queue">
+                        <i data-lucide="list-ordered"></i> Navbatlar
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="welcome-text">
+                <h1 id="page-title">Asosiy Panel</h1>
+                <p>Bugun: <span id="current-date"></span></p>
+            </div>
+            <div class="user-profile">
+                <button class="btn btn-primary" id="add-quick-btn">
+                    <i data-lucide="plus"></i> Yangi qabul
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e0f2fe; color: #0369a1;">
+                        <i data-lucide="user-plus"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Jami Bemorlar</h3>
+                        <p id="stat-total-patients">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #dcfce7; color: #15803d;">
+                        <i data-lucide="stethoscope"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Shifokorlar</h3>
+                        <p id="stat-total-doctors">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fef3c7; color: #b45309;">
+                        <i data-lucide="clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Kutayotganlar</h3>
+                        <p id="stat-pending">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <h2>Bugungi Navbatlar</h2>
+                </div>
+                <table id="dashboard-queue-table">
+                    <thead>
+                        <tr>
+                            <th>Bemor</th>
+                            <th>Shifokor</th>
+                            <th>Vaqt</th>
+                            <th>Holat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- JS orqali to'ldiriladi -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Doctors Section -->
+        <section id="doctors" class="section">
+            <div class="card">
+                <div class="card-title">
+                    <h2>Shifokorlar Ro'yxati</h2>
+                    <button class="btn btn-primary" onclick="showModal('doctor')">
+                        <i data-lucide="plus"></i> Shifokor qo'shish
+                    </button>
+                </div>
+                <table id="doctors-table">
+                    <thead>
+                        <tr>
+                            <th>Ism-sharif</th>
+                            <th>Mutaxassislik</th>
+                            <th>Xona</th>
+                            <th>Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Patients Section -->
+        <section id="patients" class="section">
+            <div class="card">
+                <div class="card-title">
+                    <h2>Bemorlar Bazasi</h2>
+                    <button class="btn btn-primary" onclick="showModal('patient')">
+                        <i data-lucide="user-plus"></i> Yangi Bemor
+                    </button>
+                </div>
+                <table id="patients-table">
+                    <thead>
+                        <tr>
+                            <th>Ism-sharif</th>
+                            <th>Telefon</th>
+                            <th>Yoshi</th>
+                            <th>Oxirgi tashrif</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Queue Section -->
+        <section id="queue" class="section">
+            <div class="card">
+                <div class="card-title">
+                    <h2>Navbatni Boshqarish</h2>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+                    <form id="queue-form" class="form-container">
+                        <h3>Navbatga qo'shish</h3>
+                        <div class="form-group">
+                            <label>Bemorni tanlang</label>
+                            <select id="queue-patient-select" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Shifokorni tanlang</label>
+                            <select id="queue-doctor-select" required></select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Navbatga qo'shish</button>
+                    </form>
+                    <div>
+                        <h3>Amaldagi navbatlar</h3>
+                        <table id="full-queue-table">
+                            <thead>
+                                <tr>
+                                    <th>N#</th>
+                                    <th>Bemor</th>
+                                    <th>Shifokor</th>
+                                    <th>Amal</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals (Simple overlays) -->
+    <div id="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+        <div class="card" style="width: 400px; background: white;">
+            <h3 id="modal-title">Ma'lumot qo'shish</h3>
+            <div id="modal-content" style="margin-top: 1rem;"></div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.5rem;">
+                <button class="btn" onclick="closeModal()">Bekor qilish</button>
+                <button class="btn btn-primary" id="modal-save-btn">Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
