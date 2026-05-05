@@ -61,18 +61,14 @@ window.switchSection = (sectionId) => {
 
 // Render Functions
 function renderAll() {
-    renderStats();
+
     renderDoctors();
     renderPatients();
     renderQueue();
     updateSelects();
 }
 
-function renderStats() {
-    document.getElementById('stat-total-patients').innerText = patients.length;
-    document.getElementById('stat-total-doctors').innerText = doctors.length;
-    document.getElementById('stat-pending').innerText = queue.filter(q => q.status === 'waiting').length;
-}
+
 
 function renderDoctors() {
     const tbody = document.querySelector('#doctors-table tbody');
