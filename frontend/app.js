@@ -38,19 +38,32 @@ function updateCurrentDate() {
 
 // Navigation
 function initNavigation() {
-    const links = document.querySelectorAll('.nav-link');
+    const links = document.querySelectorAll('.nav-menu a');
     links.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const sectionId = link.getAttribute('data-section');
-            links.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            document.getElementById('page-title').innerText = link.innerText.trim();
+            switchSection(sectionId);
         });
     });
 }
+
+window.switchSection = (sectionId) => {
+    // Update links
+    document.querySelectorAll('.nav-menu a').forEach(l => {
+        l.classList.remove('active');
+        if(l.getAttribute('data-section') === sectionId) l.classList.add('active');
+    });
+
+    // Toggle sections
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+
+    // Smooth scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    if(sectionId !== 'home') fetchAllData();
+};
 
 // Render Functions
 function renderAll() {
