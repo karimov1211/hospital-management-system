@@ -7,7 +7,7 @@ let queue = [];
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    updateCurrentDate();
+
     initNavigation();
     fetchAllData();
     setupForms();
@@ -31,10 +31,7 @@ async function fetchAllData() {
     }
 }
 
-function updateCurrentDate() {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('current-date').innerText = new Date().toLocaleDateString('uz-UZ', options);
-}
+
 
 // Navigation
 function initNavigation() {
