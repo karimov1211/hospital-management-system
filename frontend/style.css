@@ -218,8 +218,8 @@ input, select {
 }
 
 select option {
-    background-color: var(--bg-dark);
-    color: white;
+    background-color: #ffffff;
+    color: #000000;
 }
 
 input:focus {
