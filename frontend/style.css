@@ -217,6 +217,11 @@ input, select {
     outline: none;
 }
 
+select option {
+    background-color: var(--bg-dark);
+    color: white;
+}
+
 input:focus {
     border-color: var(--secondary);
 }
