@@ -16,20 +16,14 @@ class ApiConfig(AppConfig):
                 def seed_db():
                     from django.core.management import call_command
                     try:
-                        print("Auto-migration and database seeding started...")
+                        print("Auto-migration started...")
                         call_command('migrate', interactive=False)
                         
-                        from api.models import Doctor, Patient, Queue
-                        # Clear old records to prevent old entries showing up
-                        Queue.objects.all().delete()
-                        Doctor.objects.all().delete()
-                        Patient.objects.all().delete()
-                        
-                        # Load data
-                        call_command('loaddata', 'api/fixtures/initial_data.json', interactive=False)
-                        print("Database successfully migrated and seeded with 24 student records!")
+                        from api.seeder import seed_database
+                        seed_database()
                     except Exception as e:
                         print(f"Auto-seeding error: {e}")
                 
                 threading.Thread(target=seed_db, daemon=True).start()
+
 
