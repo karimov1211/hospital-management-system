@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedCare Premium | Raqamli Tibbiyot Platformasi</title>
-    <link rel="stylesheet" href="/static/style.css?v=3">
+    <title>MedCare | Kasalxona Boshqaruv Tizimi</title>
+    <meta name="description" content="MedCare - Shifokorlar va bemorlar navbatini boshqarish tizimi">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}?v=10">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
@@ -17,66 +21,41 @@
             <span>MedCare</span>
         </div>
         <ul class="nav-menu">
-            <li><a href="#" class="active" data-section="home">Asosiy</a></li>
-            <li><a href="#" data-section="doctors">Shifokorlar</a></li>
-            <li><a href="#" data-section="patients">Bemorlar</a></li>
-            <li><a href="#" data-section="queue">Navbatlar</a></li>
+            <li><a href="#" class="active" data-section="doctors" id="nav-doctors">Shifokorlar</a></li>
+            <li><a href="#" data-section="patients" id="nav-patients">Bemorlar</a></li>
+            <li><a href="#" data-section="queue" id="nav-queue">Navbatlar</a></li>
         </ul>
-        <button class="btn btn-primary" onclick="switchSection('queue')">
+        <button class="btn btn-primary" onclick="switchSection('queue')" id="btn-quick-queue">
+            <i data-lucide="clock" style="width:16px;height:16px;vertical-align:middle;margin-right:6px;"></i>
             Tezkor Navbat
         </button>
     </nav>
 
-    <!-- Home / Hero Section -->
-    <section id="home" class="section active">
-        <header class="hero">
-            <h1>Kelajak Tibbiyoti <br><span style="color: var(--secondary)">Bugun Shunda.</span></h1>
-            <p>MedCare platformasi yordamida shifokorlar va bemorlar o'rtasidagi masofani qisqartiring. Azure Cloud texnologiyalari asosida xavfsiz va tezkor boshqaruv.</p>
-            <div style="display: flex; gap: 1rem;">
-                <button class="btn btn-primary" onclick="switchSection('doctors')">Boshlash</button>
-                <button class="btn" style="border: 1px solid white;" onclick="window.open('https://github.com/karimov1211/hospital-management-system')">GitHub</button>
-            </div>
-        </header>
-
-        <div class="container">
-            <div class="grid">
-                <div class="glass-card">
-                    <i data-lucide="zap"></i>
-                    <h3>Tezkor Navbat</h3>
-                    <p>Bemorlarni shifokorlarga soniyalar ichida biriktiring va navbatni boshqaring.</p>
-                </div>
-                <div class="glass-card">
-                    <i data-lucide="database"></i>
-                    <h3>Azure SQL</h3>
-                    <p>Barcha ma'lumotlaringiz Microsoft Azure bulutli tizimida xavfsiz saqlanadi.</p>
-                </div>
-                <div class="glass-card">
-                    <i data-lucide="line-chart"></i>
-                    <h3>Analitika</h3>
-                    <p>Kasalxona ish faoliyati va kunlik tashriflar bo'yicha to'liq hisobotlarni oling.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Doctors Section -->
-    <section id="doctors" class="section">
+    <section id="doctors" class="section active">
         <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h2>Shifokorlarimiz</h2>
-
+            <div class="section-header">
+                <div>
+                    <h1 class="section-title"><i data-lucide="stethoscope" class="section-icon"></i> Shifokorlar</h1>
+                    <p class="section-sub">Jami <span id="doctors-count">0</span> nafar shifokor ro'yxatda</p>
+                </div>
+                <button class="btn btn-primary" onclick="showModal('doctor')" id="btn-add-doctor">
+                    <i data-lucide="plus" style="width:16px;height:16px;vertical-align:middle;margin-right:6px;"></i>
+                    Yangi Shifokor
+                </button>
             </div>
             <div class="table-container">
                 <table id="doctors-table">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Ism-sharif</th>
                             <th>Mutaxassislik</th>
                             <th>Xona</th>
-
+                            <th>Amallar</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody><tr><td colspan="5" class="loading-row">Yuklanmoqda...</td></tr></tbody>
                 </table>
             </div>
         </div>
@@ -85,21 +64,28 @@
     <!-- Patients Section -->
     <section id="patients" class="section">
         <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                <h2>Bemorlar Bazasi</h2>
-
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title"><i data-lucide="users" class="section-icon"></i> Bemorlar</h2>
+                    <p class="section-sub">Jami <span id="patients-count">0</span> nafar bemor ro'yxatda</p>
+                </div>
+                <button class="btn btn-primary" onclick="showModal('patient')" id="btn-add-patient">
+                    <i data-lucide="user-plus" style="width:16px;height:16px;vertical-align:middle;margin-right:6px;"></i>
+                    Yangi Bemor
+                </button>
             </div>
             <div class="table-container">
                 <table id="patients-table">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Ism-sharif</th>
                             <th>Telefon</th>
                             <th>Yosh</th>
-                            <th>Holat</th>
+                            <th>Amallar</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody><tr><td colspan="5" class="loading-row">Yuklanmoqda...</td></tr></tbody>
                 </table>
             </div>
         </div>
@@ -108,56 +94,76 @@
     <!-- Queue Section -->
     <section id="queue" class="section">
         <div class="container">
-            <h2>Navbatlarni Boshqarish</h2>
-            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 3rem; margin-top: 2rem;">
-                <div class="glass-card">
-                    <h3>Yangi Qabul</h3>
-                    <form id="queue-form" style="margin-top: 1.5rem;">
-                        <div class="input-group">
-                            <label>Bemor</label>
-                            <select id="queue-patient-select"></select>
-                        </div>
-                        <div class="input-group">
-                            <label>Shifokor</label>
-                            <select id="queue-doctor-select"></select>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">Navbatga Qo'shish</button>
-                    </form>
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title"><i data-lucide="list-ordered" class="section-icon"></i> Navbatlar</h2>
+                    <p class="section-sub">Jami <span id="queue-count">0</span> ta navbat</p>
                 </div>
-                <div class="table-container">
-                    <h3>Joriy Navbatlar</h3>
-                    <table id="full-queue-table" style="margin-top: 1rem;">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Bemor</th>
-                                <th>Shifokor</th>
-                                <th>Vaqt</th>
+            </div>
 
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+            <div class="glass-card queue-form-card">
+                <h3 style="margin-bottom:1.5rem; font-size:1.1rem; color:var(--secondary);">
+                    <i data-lucide="plus-circle" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;"></i>
+                    Navbatga Qo'shish
+                </h3>
+                <form id="queue-form" class="queue-form-grid">
+                    <div class="input-group">
+                        <label>Bemor</label>
+                        <select id="queue-patient-select" required></select>
+                    </div>
+                    <div class="input-group">
+                        <label>Shifokor</label>
+                        <select id="queue-doctor-select" required></select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btn-add-queue">
+                        <i data-lucide="plus" style="width:16px;height:16px;vertical-align:middle;margin-right:6px;"></i>
+                        Qo'shish
+                    </button>
+                </form>
+            </div>
+
+            <div class="table-container" style="margin-top:2rem;">
+                <table id="full-queue-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Bemor</th>
+                            <th>Shifokor</th>
+                            <th>Vaqt</th>
+                            <th>Holat</th>
+                            <th>Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody><tr><td colspan="6" class="loading-row">Yuklanmoqda...</td></tr></tbody>
+                </table>
             </div>
         </div>
     </section>
 
-    <!-- Simple Modal -->
-    <div id="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:2000; align-items:center; justify-content:center; backdrop-filter: blur(5px);">
-        <div class="glass-card" style="width: 450px; background: #1e293b;">
-            <h3 id="modal-title">Yangi Ma'lumot</h3>
+    <!-- Modal -->
+    <div id="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:2000; align-items:center; justify-content:center; backdrop-filter: blur(8px);">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-title">Yangi Ma'lumot</h3>
+                <button class="modal-close-btn" onclick="closeModal()" id="btn-modal-close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
             <div id="modal-content" style="margin-top: 1.5rem;"></div>
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 2rem;">
-                <button class="btn" onclick="closeModal()">Bekor qilish</button>
-                <button class="btn btn-primary" id="modal-save-btn">Saqlash</button>
+                <button class="btn" onclick="closeModal()" id="btn-cancel-modal">Bekor qilish</button>
+                <button class="btn btn-primary" id="modal-save-btn">
+                    <i data-lucide="save" style="width:16px;height:16px;vertical-align:middle;margin-right:6px;"></i>
+                    Saqlash
+                </button>
             </div>
         </div>
     </div>
 
-    <script src="/static/app.js?v=4"></script>
-    <script>
-        lucide.createIcons();
-    </script>
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script src="{% static 'app.js' %}?v=10"></script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>
