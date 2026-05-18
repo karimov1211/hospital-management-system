@@ -17,7 +17,7 @@ def seed_database():
                 {"name": "Bog'ibekov Oybek Bekpo'lat o'g'li", "specialty": "Xirurg", "room": "103"},
                 {"name": "Baxtiyarova Nafisa Murod qizi", "specialty": "Nevropatolog", "room": "104"},
                 {"name": "Boltabayeva Zuxra Hamidjon qizi", "specialty": "LOR", "room": "105"},
-                {"name": "Gulimova Sarvinoz Mansurbek qizi", "specialty": "Stomatolog", "room": "106"},
+                {"name": "Gulimova Sarvinoz Mansurbek qiz1", "specialty": "Stomatolog", "room": "106"},
                 {"name": "Jabbarova Shaydo Anvar qizi", "specialty": "Oftalmolog", "room": "107"},
                 {"name": "Janibekov Sherzod Farxod o'g'li", "specialty": "Dermatolog", "room": "108"}
             ]
