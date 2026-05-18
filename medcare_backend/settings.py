@@ -93,7 +93,7 @@ DATABASES = {
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
             'encrypt': 'yes',
-            'trust_server_certificate': 'no',
+            'trust_server_certificate': 'yes',
         },
     }
 }
