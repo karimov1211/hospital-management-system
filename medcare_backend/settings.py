@@ -85,10 +85,10 @@ WSGI_APPLICATION = 'medcare_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'azurefreetutorial',
-        'USER': 'azure-admin',
-        'PASSWORD': 'Hamdambek2006',
-        'HOST': 'azurefreetrial.database.windows.net',
+        'NAME': 'LibraryDB',
+        'USER': 'dbadmin',
+        'PASSWORD': 'AzurePassword123!',
+        'HOST': 'library-server-karimov1211.database.windows.net',
         'PORT': '1433',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
