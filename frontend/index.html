@@ -21,7 +21,8 @@
             <span>MedCare</span>
         </div>
         <ul class="nav-menu">
-            <li><a href="#" class="active" data-section="doctors" id="nav-doctors">Shifokorlar</a></li>
+            <li><a href="#" class="active" data-section="home" id="nav-home">Bosh Sahifa</a></li>
+            <li><a href="#" data-section="doctors" id="nav-doctors">Shifokorlar</a></li>
             <li><a href="#" data-section="patients" id="nav-patients">Bemorlar</a></li>
             <li><a href="#" data-section="queue" id="nav-queue">Navbatlar</a></li>
         </ul>
@@ -31,8 +32,103 @@
         </button>
     </nav>
 
+    <!-- Home Section -->
+    <section id="home" class="section active">
+        <div class="container">
+            <div class="hero-section">
+                <div class="hero-text">
+                    <span class="hero-badge"><i data-lucide="sparkles"></i> Innovatsion Kasalxona Tizimi</span>
+                    <h1 class="hero-title">Kasalxona Faoliyatini Raqamli Boshqarish</h1>
+                    <p class="hero-desc">MedCare orqali shifokorlar va bemorlar navbatlarini real vaqt rejimida boshqaring. Kasalxona faoliyatini sodda, qulay va tezkor tizimga o'tkazing.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-lg" onclick="switchSection('queue')">
+                            <i data-lucide="calendar-plus" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;"></i>
+                            Navbatga Yozish
+                        </button>
+                        <button class="btn btn-secondary btn-lg" onclick="switchSection('doctors')" style="border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.05);">
+                            <i data-lucide="stethoscope" style="width:18px;height:18px;vertical-align:middle;margin-right:6px;"></i>
+                            Shifokorlarimiz
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="doctor-illustration">
+                        <div class="doc-pulse-glow"></div>
+                        <div class="doc-card-back"></div>
+                        <div class="doc-main-card">
+                            <div class="doc-avatar">
+                                <i data-lucide="stethoscope"></i>
+                            </div>
+                            <div class="doc-info">
+                                <h3>MedCare Xizmati</h3>
+                                <p>Tizimda faol xizmatlar</p>
+                            </div>
+                            <div class="doc-status-pulse">
+                                <span class="status-dot"></span> Online
+                            </div>
+                        </div>
+                        <div class="floating-panel doc-floating-1">
+                            <i data-lucide="heart" class="icon-pulse"></i>
+                            <div>
+                                <h4>Yurak Urishi</h4>
+                                <small>Kardiologiya</small>
+                            </div>
+                        </div>
+                        <div class="floating-panel doc-floating-2">
+                            <i data-lucide="activity" class="icon-wave"></i>
+                            <div>
+                                <h4>Monitoring</h4>
+                                <small>Real-vaqtda faol</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats grid -->
+            <div class="stats-grid">
+                <div class="stat-card" onclick="switchSection('doctors')">
+                    <div class="stat-icon-wrapper doctor-wrapper">
+                        <i data-lucide="stethoscope"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-doctors-count">0</h3>
+                        <p>Jami Shifokorlar</p>
+                    </div>
+                    <div class="stat-arrow">
+                        <i data-lucide="arrow-right"></i>
+                    </div>
+                </div>
+                <div class="stat-card" onclick="switchSection('patients')">
+                    <div class="stat-icon-wrapper patient-wrapper">
+                        <i data-lucide="users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-patients-count">0</h3>
+                        <p>Jami Bemorlar</p>
+                    </div>
+                    <div class="stat-arrow">
+                        <i data-lucide="arrow-right"></i>
+                    </div>
+                </div>
+                <div class="stat-card" onclick="switchSection('queue')">
+                    <div class="stat-icon-wrapper queue-wrapper">
+                        <i data-lucide="clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="stat-queue-count">0</h3>
+                        <p>Kutilayotgan Navbatlar</p>
+                    </div>
+                    <div class="stat-arrow">
+                        <i data-lucide="arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Doctors Section -->
-    <section id="doctors" class="section active">
+    <section id="doctors" class="section">
         <div class="container">
             <div class="section-header">
                 <div>

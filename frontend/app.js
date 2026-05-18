@@ -56,11 +56,21 @@ window.switchSection = (sectionId) => {
 };
 
 function renderAll() {
+    renderHome();
     renderDoctors();
     renderPatients();
     renderQueue();
     updateSelects();
     lucide.createIcons();
+}
+
+function renderHome() {
+    const docCount = document.getElementById('stat-doctors-count');
+    const patCount = document.getElementById('stat-patients-count');
+    const qCount = document.getElementById('stat-queue-count');
+    if (docCount) docCount.textContent = doctors.length;
+    if (patCount) patCount.textContent = patients.length;
+    if (qCount) qCount.textContent = queue.length;
 }
 
 function renderDoctors() {
